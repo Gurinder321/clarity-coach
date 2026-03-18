@@ -1,223 +1,748 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clarity Coach — Sales Call Analyzer</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --ink: #0f0e0c; --ink-soft: #4a4741; --ink-muted: #9a958e;
-    --paper: #faf8f4; --paper-dark: #e8e3d9;
-    --gold: #c9a84c; --gold-light: #f0dfa0; --gold-pale: #fdf7e3;
-    --green: #2d6a4f; --green-pale: #e8f4ed;
-    --red: #c0392b; --red-pale: #fdecea;
-    --amber: #d97706; --amber-pale: #fef3cd;
-    --blue: #1d4ed8; --blue-pale: #eff6ff;
-    --border: #ddd8ce;
-  }
-  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clarity Coach — Sales Call Analyzer</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  .header { background: var(--ink); padding: 28px 48px; display: flex; align-items: center; justify-content: space-between; }
-  .header-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: #fff; }
-  .header-sub { font-size: 12px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; margin-left: 12px; }
-  .header-badge { font-size: 11px; color: var(--ink-muted); letter-spacing: 1px; text-transform: uppercase; }
+    :root {
+      --ink: #0f0e0c;
+      --ink-soft: #4a4741;
+      --ink-muted: #9a958e;
+      --paper: #faf8f4;
+      --paper-dark: #e8e3d9;
+      --gold: #c9a84c;
+      --gold-light: #f0dfa0;
+      --gold-pale: #fdf7e3;
+      --green: #2d6a4f;
+      --green-pale: #e8f4ed;
+      --red: #c0392b;
+      --red-pale: #fdecea;
+      --amber: #d97706;
+      --amber-pale: #fef3cd;
+      --blue: #1d4ed8;
+      --blue-pale: #eff6ff;
+      --border: #ddd8ce;
+    }
 
-  .container { max-width: 900px; margin: 0 auto; padding: 48px 32px; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
 
-  .input-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin-bottom: 32px; }
-  .input-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-muted); font-weight: 600; margin-bottom: 10px; display: block; }
-  .input-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--ink); margin-bottom: 6px; }
-  .input-desc { color: var(--ink-soft); font-size: 14px; margin-bottom: 24px; }
+    .header {
+      background: var(--ink);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-  .call-type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
-  .call-type-btn { border: 1.5px solid var(--border); border-radius: 10px; padding: 20px 24px; cursor: pointer; background: #fff; text-align: left; transition: all 0.18s; position: relative; }
-  .call-type-btn:hover { border-color: var(--gold); }
-  .call-type-btn.selected { border-color: var(--gold); background: var(--gold-pale); }
-  .call-type-btn.selected::after { content: '✓'; position: absolute; top: 14px; right: 16px; font-size: 14px; color: var(--gold); font-weight: 700; }
-  .call-type-tag { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-muted); font-weight: 600; margin-bottom: 5px; }
-  .call-type-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); margin-bottom: 6px; }
-  .call-type-stages { font-size: 12px; color: var(--ink-muted); line-height: 1.6; }
+    .header-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: #fff;
+    }
 
-  textarea { width: 100%; min-height: 220px; border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); background: var(--paper); resize: vertical; outline: none; transition: border-color 0.2s; line-height: 1.7; }
-  textarea:focus { border-color: var(--gold); background: #fff; }
-  textarea::placeholder { color: var(--ink-muted); }
+    .header-sub {
+      font-size: 12px;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-left: 12px;
+    }
 
-  .analyze-btn { margin-top: 16px; background: var(--ink); color: #fff; border: none; border-radius: 8px; padding: 14px 32px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; display: inline-flex; align-items: center; gap: 8px; }
-  .analyze-btn:hover { background: #1f1e1a; }
-  .analyze-btn:active { transform: scale(0.98); }
+    .header-badge {
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
 
-  .loading { display: none; text-align: center; padding: 64px 0; }
-  .loading.active { display: block; }
-  .loading-spinner { width: 40px; height: 40px; border: 3px solid var(--paper-dark); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink-soft); font-style: italic; }
-  .loading-sub { font-size: 13px; color: var(--ink-muted); margin-top: 6px; }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 32px;
+    }
 
-  .results { display: none; }
-  .results.active { display: block; }
+    .input-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+      margin-bottom: 32px;
+    }
 
-  .call-type-banner { display: inline-flex; align-items: center; gap: 8px; background: var(--gold-pale); border: 1px solid var(--gold-light); border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: var(--amber); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+    .input-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: block;
+    }
 
-  .score-banner { background: var(--ink); border-radius: 12px; padding: 36px 40px; margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-  .score-eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 8px; }
-  .score-name { font-family: 'DM Serif Display', serif; font-size: 28px; color: #fff; margin-bottom: 6px; }
-  .score-summary { font-size: 14px; color: #a09b93; max-width: 480px; line-height: 1.6; }
-  .score-circle { flex-shrink: 0; width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .score-number { font-family: 'DM Serif Display', serif; font-size: 36px; color: #fff; line-height: 1; }
-  .score-denom { font-size: 11px; color: var(--gold); letter-spacing: 1px; }
+    .input-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
 
-  .consciousness-row { background: var(--gold-pale); border: 1px solid var(--gold-light); border-radius: 10px; padding: 20px 28px; margin-bottom: 28px; display: flex; align-items: center; gap: 16px; }
-  .consciousness-icon { font-size: 24px; }
-  .consciousness-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 3px; }
-  .consciousness-value { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); }
-  .consciousness-desc { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
+    .input-desc {
+      color: var(--ink-soft);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
 
-  .handoff-card { background: var(--blue-pale); border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px 28px; margin-bottom: 28px; }
-  .handoff-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); font-weight: 600; margin-bottom: 6px; }
-  .handoff-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink); margin-bottom: 10px; }
-  .handoff-body { font-size: 14px; color: var(--ink-soft); line-height: 1.7; white-space: pre-wrap; }
+    .call-type-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
 
-  .stages-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--ink); margin-bottom: 16px; }
-  .stage-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
-  .stage-header { padding: 18px 24px; display: flex; align-items: center; gap: 16px; cursor: pointer; user-select: none; }
-  .stage-header:hover { background: var(--paper); }
-  .stage-num { font-size: 11px; font-weight: 600; color: var(--ink-muted); letter-spacing: 1px; min-width: 28px; }
-  .stage-name { font-weight: 600; font-size: 15px; flex: 1; }
-  .stage-score-pill { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
-  .pill-green { background: var(--green-pale); color: var(--green); }
-  .pill-amber { background: var(--amber-pale); color: var(--amber); }
-  .pill-red { background: var(--red-pale); color: var(--red); }
-  .pill-gray { background: var(--paper-dark); color: var(--ink-soft); }
-  .stage-chevron { font-size: 12px; color: var(--ink-muted); transition: transform 0.2s; }
-  .stage-card.open .stage-chevron { transform: rotate(180deg); }
-  .stage-body { display: none; padding: 0 24px 22px; border-top: 1px solid var(--border); }
-  .stage-card.open .stage-body { display: block; }
-  .stage-section-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-muted); font-weight: 600; margin: 16px 0 6px; }
-  .stage-text { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .tag { font-size: 12px; padding: 3px 10px; border-radius: 4px; font-weight: 500; }
-  .tag-win { background: var(--green-pale); color: var(--green); }
-  .tag-miss { background: var(--red-pale); color: var(--red); }
+    .call-type-btn {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      cursor: pointer;
+      background: #fff;
+      text-align: left;
+      transition: all 0.18s;
+      position: relative;
+    }
 
-  .coaching-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin-top: 28px; }
-  .coaching-eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
-  .coaching-title { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 20px; }
-  .coaching-body { font-size: 14px; color: var(--ink-soft); line-height: 1.8; white-space: pre-wrap; }
-  .priority-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-  .priority-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px 18px; background: var(--paper); border-radius: 8px; border: 1px solid var(--border); }
-  .priority-num { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--gold); line-height: 1; min-width: 20px; margin-top: 2px; }
-  .priority-text { font-size: 14px; color: var(--ink); line-height: 1.6; }
-  .priority-text strong { font-weight: 600; }
+    .call-type-btn:hover {
+      border-color: var(--gold);
+    }
 
-  .reset-btn { margin-top: 32px; background: transparent; color: var(--ink-muted); border: 1px solid var(--border); border-radius: 8px; padding: 10px 24px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; }
-  .reset-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
+    .call-type-btn.selected {
+      border-color: var(--gold);
+      background: var(--gold-pale);
+    }
 
-  .error-box { display: none; background: var(--red-pale); border: 1px solid #f5c6c2; border-radius: 8px; padding: 16px 20px; font-size: 14px; color: var(--red); margin-top: 16px; }
-  .error-box.active { display: block; }
-</style>
+    .call-type-btn.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 14px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .call-type-tag {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .call-type-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .call-type-stages {
+      font-size: 12px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: var(--paper);
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.7;
+    }
+
+    textarea:focus {
+      border-color: var(--gold);
+      background: #fff;
+    }
+
+    textarea::placeholder {
+      color: var(--ink-muted);
+    }
+
+    .analyze-btn {
+      margin-top: 16px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 32px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .analyze-btn:hover {
+      background: #1f1e1a;
+    }
+
+    .analyze-btn:active {
+      transform: scale(0.98);
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 64px 0;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--paper-dark);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--ink-soft);
+      font-style: italic;
+    }
+
+    .loading-sub {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-top: 6px;
+    }
+
+    .results {
+      display: none;
+    }
+
+    .results.active {
+      display: block;
+    }
+
+    .call-type-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold-pale);
+      border: 1px solid var(--gold-light);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--amber);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .score-banner {
+      background: var(--ink);
+      border-radius: 12px;
+      padding: 36px 40px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .score-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .score-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .score-summary {
+      font-size: 14px;
+      color: #a09b93;
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+    .score-circle {
+      flex-shrink: 0;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 36px;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .score-denom {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .consciousness-row {
+      background: var(--gold-pale);
+      border: 1px solid var(--gold-light);
+      border-radius: 10px;
+      padding: 20px 28px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .consciousness-icon {
+      font-size: 24px;
+    }
+
+    .consciousness-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--amber);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .consciousness-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    .consciousness-desc {
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .handoff-card {
+      background: var(--blue-pale);
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 20px 28px;
+      margin-bottom: 28px;
+    }
+
+    .handoff-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .handoff-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .handoff-body {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .stages-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .stage-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .stage-header {
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .stage-header:hover {
+      background: var(--paper);
+    }
+
+    .stage-num {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      letter-spacing: 1px;
+      min-width: 28px;
+    }
+
+    .stage-name {
+      font-weight: 600;
+      font-size: 15px;
+      flex: 1;
+    }
+
+    .stage-score-pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .pill-green {
+      background: var(--green-pale);
+      color: var(--green);
+    }
+
+    .pill-amber {
+      background: var(--amber-pale);
+      color: var(--amber);
+    }
+
+    .pill-red {
+      background: var(--red-pale);
+      color: var(--red);
+    }
+
+    .pill-gray {
+      background: var(--paper-dark);
+      color: var(--ink-soft);
+    }
+
+    .stage-chevron {
+      font-size: 12px;
+      color: var(--ink-muted);
+      transition: transform 0.2s;
+    }
+
+    .stage-card.open .stage-chevron {
+      transform: rotate(180deg);
+    }
+
+    .stage-body {
+      display: none;
+      padding: 0 24px 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stage-card.open .stage-body {
+      display: block;
+    }
+
+    .stage-section-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin: 16px 0 6px;
+    }
+
+    .stage-text {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .tag-win {
+      background: var(--green-pale);
+      color: var(--green);
+    }
+
+    .tag-miss {
+      background: var(--red-pale);
+      color: var(--red);
+    }
+
+    .coaching-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-top: 28px;
+    }
+
+    .coaching-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .coaching-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .coaching-body {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .priority-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .priority-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 18px;
+      background: var(--paper);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .priority-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--gold);
+      line-height: 1;
+      min-width: 20px;
+      margin-top: 2px;
+    }
+
+    .priority-text {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .priority-text strong {
+      font-weight: 600;
+    }
+
+    .reset-btn {
+      margin-top: 32px;
+      background: transparent;
+      color: var(--ink-muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      color: var(--ink);
+      border-color: var(--ink-soft);
+    }
+
+    .error-box {
+      display: none;
+      background: var(--red-pale);
+      border: 1px solid #f5c6c2;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 14px;
+      color: var(--red);
+      margin-top: 16px;
+    }
+
+    .error-box.active {
+      display: block;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="header">
-  <div style="display:flex;align-items:baseline;">
-    <div class="header-title">Clarity Coach</div>
-    <div class="header-sub">Powered by Clarity Selling</div>
-  </div>
-  <div class="header-badge">Bryan Ostermiller Framework</div>
-</div>
-
-<div class="container">
-
-  <div class="input-card" id="inputSection">
-    <span class="input-label">Step 1 — Select Call Type</span>
-    <h1 class="input-title">Which call are you analyzing?</h1>
-    <p class="input-desc">Select the call type so the AI scores against the right stages of Bryan's framework.</p>
-
-    <div class="call-type-row">
-      <div class="call-type-btn" id="btn-discovery" onclick="selectCallType('discovery')">
-        <div class="call-type-tag">Call 1</div>
-        <div class="call-type-name">Discovery Call</div>
-        <div class="call-type-stages">Introduction · Frame · Current Situation · Goals · Efforts to Solve · Timeline · Casting Vision</div>
-      </div>
-      <div class="call-type-btn" id="btn-growth" onclick="selectCallType('growth')">
-        <div class="call-type-tag">Call 2</div>
-        <div class="call-type-name">Growth Call</div>
-        <div class="call-type-stages">Bridge/Recap · Transition to Pitch · Pitch · Price Drop · Hold Space · Ask for Close · Find Clarity</div>
-      </div>
+  <div class="header">
+    <div style="display:flex;align-items:baseline;">
+      <div class="header-title">Clarity Coach</div>
+      <div class="header-sub">Powered by Clarity Selling</div>
     </div>
-
-    <span class="input-label">Step 2 — Paste Transcript</span>
-    <p class="input-desc">Include both sides of the conversation for the most accurate coaching.</p>
-    <textarea id="transcriptInput" placeholder="Paste your full call transcript here..."></textarea>
-
-    <button class="analyze-btn" onclick="analyzeCall()">◆ Analyze This Call</button>
-    <div class="error-box" id="errorBox"></div>
+    <div class="header-badge">Bryan Ostermiller Framework</div>
   </div>
 
-  <div class="loading" id="loadingSection">
-    <div class="loading-spinner"></div>
-    <div class="loading-text">Analyzing your call...</div>
-    <div class="loading-sub" id="loadingSub">Scoring against Bryan's Clarity Selling framework</div>
+  <div class="container">
+
+    <div class="input-card" id="inputSection">
+      <span class="input-label">Step 1 — Select Call Type</span>
+      <h1 class="input-title">Which call are you analyzing?</h1>
+      <p class="input-desc">Select the call type so the AI scores against the right stages of Bryan's framework.</p>
+
+      <div class="call-type-row">
+        <div class="call-type-btn" id="btn-discovery" onclick="selectCallType('discovery')">
+          <div class="call-type-tag">Call 1</div>
+          <div class="call-type-name">Discovery Call</div>
+          <div class="call-type-stages">Introduction · Frame · Current Situation · Goals · Efforts to Solve · Timeline ·
+            Casting Vision</div>
+        </div>
+        <div class="call-type-btn" id="btn-growth" onclick="selectCallType('growth')">
+          <div class="call-type-tag">Call 2</div>
+          <div class="call-type-name">Growth Call</div>
+          <div class="call-type-stages">Bridge/Recap · Transition to Pitch · Pitch · Price Drop · Hold Space · Ask for
+            Close · Find Clarity</div>
+        </div>
+      </div>
+
+      <span class="input-label">Step 2 — Paste Transcript</span>
+      <p class="input-desc">Include both sides of the conversation for the most accurate coaching.</p>
+      <textarea id="transcriptInput" placeholder="Paste your full call transcript here..."></textarea>
+
+      <button class="analyze-btn" onclick="analyzeCall()">◆ Analyze This Call</button>
+      <div class="error-box" id="errorBox"></div>
+    </div>
+
+    <div class="loading" id="loadingSection">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Analyzing your call...</div>
+      <div class="loading-sub" id="loadingSub">Scoring against Bryan's Clarity Selling framework</div>
+    </div>
+
+    <div class="results" id="resultsSection">
+      <div class="call-type-banner" id="resCallTypeBanner">◆ Discovery Call</div>
+
+      <div class="score-banner">
+        <div>
+          <div class="score-eyebrow">Overall Performance</div>
+          <div class="score-name" id="resOverallLabel">—</div>
+          <div class="score-summary" id="resOverallSummary">—</div>
+        </div>
+        <div class="score-circle">
+          <div class="score-number" id="resScore">—</div>
+          <div class="score-denom">/ 10</div>
+        </div>
+      </div>
+
+      <div class="consciousness-row">
+        <div class="consciousness-icon">🧠</div>
+        <div>
+          <div class="consciousness-label">Prospect Consciousness Level Identified</div>
+          <div class="consciousness-value" id="resConsciousness">—</div>
+          <div class="consciousness-desc" id="resConsciousnessDesc">—</div>
+        </div>
+      </div>
+
+      <div class="handoff-card" id="handoffCard" style="display:none;">
+        <div class="handoff-label">Growth Call Setup</div>
+        <div class="handoff-title">What to carry into the Growth Call</div>
+        <div class="handoff-body" id="resHandoff">—</div>
+      </div>
+
+      <div class="stages-title">Stage-by-Stage Breakdown</div>
+      <div id="stagesContainer"></div>
+
+      <div class="coaching-card">
+        <div class="coaching-eyebrow">Bryan's Coaching Notes</div>
+        <div class="coaching-title">What to Focus on Next</div>
+        <div class="coaching-body" id="resCoachingNotes">—</div>
+        <div class="stages-title" style="font-size:17px;margin-top:28px;margin-bottom:12px;">Top 3 Priorities for Your
+          Next Call</div>
+        <div class="priority-list" id="resPriorityList"></div>
+      </div>
+
+      <button class="reset-btn" onclick="resetTool()">← Analyze Another Call</button>
+    </div>
+
   </div>
 
-  <div class="results" id="resultsSection">
-    <div class="call-type-banner" id="resCallTypeBanner">◆ Discovery Call</div>
+  <script>
+    let selectedCallType = null;
 
-    <div class="score-banner">
-      <div>
-        <div class="score-eyebrow">Overall Performance</div>
-        <div class="score-name" id="resOverallLabel">—</div>
-        <div class="score-summary" id="resOverallSummary">—</div>
-      </div>
-      <div class="score-circle">
-        <div class="score-number" id="resScore">—</div>
-        <div class="score-denom">/ 10</div>
-      </div>
-    </div>
+    function selectCallType(type) {
+      selectedCallType = type;
+      document.getElementById('btn-discovery').classList.toggle('selected', type === 'discovery');
+      document.getElementById('btn-growth').classList.toggle('selected', type === 'growth');
+    }
 
-    <div class="consciousness-row">
-      <div class="consciousness-icon">🧠</div>
-      <div>
-        <div class="consciousness-label">Prospect Consciousness Level Identified</div>
-        <div class="consciousness-value" id="resConsciousness">—</div>
-        <div class="consciousness-desc" id="resConsciousnessDesc">—</div>
-      </div>
-    </div>
-
-    <div class="handoff-card" id="handoffCard" style="display:none;">
-      <div class="handoff-label">Growth Call Setup</div>
-      <div class="handoff-title">What to carry into the Growth Call</div>
-      <div class="handoff-body" id="resHandoff">—</div>
-    </div>
-
-    <div class="stages-title">Stage-by-Stage Breakdown</div>
-    <div id="stagesContainer"></div>
-
-    <div class="coaching-card">
-      <div class="coaching-eyebrow">Bryan's Coaching Notes</div>
-      <div class="coaching-title">What to Focus on Next</div>
-      <div class="coaching-body" id="resCoachingNotes">—</div>
-      <div class="stages-title" style="font-size:17px;margin-top:28px;margin-bottom:12px;">Top 3 Priorities for Your Next Call</div>
-      <div class="priority-list" id="resPriorityList"></div>
-    </div>
-
-    <button class="reset-btn" onclick="resetTool()">← Analyze Another Call</button>
-  </div>
-
-</div>
-
-<script>
-let selectedCallType = null;
-
-function selectCallType(type) {
-  selectedCallType = type;
-  document.getElementById('btn-discovery').classList.toggle('selected', type === 'discovery');
-  document.getElementById('btn-growth').classList.toggle('selected', type === 'growth');
-}
-
-const DISCOVERY_SYSTEM = `You are Bryan Ostermiller's AI sales coaching assistant, trained on the full Clarity Selling framework. You analyze DISCOVERY CALL transcripts — the first of a two-call process where the goal is to qualify, understand, and set up the Growth call.
+    const DISCOVERY_SYSTEM = `You are Bryan Ostermiller's AI sales coaching assistant, trained on the full Clarity Selling framework. You analyze DISCOVERY CALL transcripts — the first of a two-call process where the goal is to qualify, understand, and set up the Growth call.
 
 DISCOVERY CALL STAGES TO SCORE:
 1. Introduction: Grounded in courage. "How are you doing? Where are you from? Do you have the full hour? Ready to jump in?" Don't force rapport — it builds naturally throughout.
@@ -270,7 +795,7 @@ Respond ONLY with valid JSON, no markdown:
 }
 Include all 7 stages. Status: "green" (7-10), "amber" (4-6), "red" (1-3), "gray" (not present).`;
 
-const GROWTH_SYSTEM = `You are Bryan Ostermiller's AI sales coaching assistant, trained on the full Clarity Selling framework. You analyze GROWTH CALL transcripts — the second of a two-call process where the goal is to pitch, handle resistance, and close.
+    const GROWTH_SYSTEM = `You are Bryan Ostermiller's AI sales coaching assistant, trained on the full Clarity Selling framework. You analyze GROWTH CALL transcripts — the second of a two-call process where the goal is to pitch, handle resistance, and close.
 
 GROWTH CALL STAGES TO SCORE:
 1. Bridge/Recap: Re-establish what was covered in Discovery. Confirm situation, goals, and urgency are still alive. Set the frame for today's call. Brief but important — not just small talk.
@@ -321,65 +846,66 @@ Respond ONLY with valid JSON, no markdown:
 }
 Include all 7 growth stages. Status: "green" (7-10), "amber" (4-6), "red" (1-3), "gray" (not present).`;
 
-async function analyzeCall() {
-  const transcript = document.getElementById('transcriptInput').value.trim();
-  if (!selectedCallType) { showError('Please select a call type — Discovery or Growth — before analyzing.'); return; }
-  if (!transcript || transcript.length < 100) { showError('Please paste a complete call transcript to get meaningful coaching.'); return; }
-  hideError();
-  showLoading();
-  const systemPrompt = selectedCallType === 'discovery' ? DISCOVERY_SYSTEM : GROWTH_SYSTEM;
-  const callLabel = selectedCallType === 'discovery' ? 'Discovery Call' : 'Growth Call';
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: `Analyze this ${callLabel} transcript against the Clarity Selling framework:\n\n${transcript}` }]
-      })
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error?.message || 'API error');
-    const raw = data.content.map(b => b.text || '').join('');
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const result = JSON.parse(clean);
-    renderResults(result, selectedCallType);
-  } catch (err) {
-    hideLoading();
-    showError('Something went wrong. Please try again. (' + err.message + ')');
-  }
-}
+    async function analyzeCall() {
+      const transcript = document.getElementById('transcriptInput').value.trim();
+      if (!selectedCallType) { showError('Please select a call type — Discovery or Growth — before analyzing.'); return; }
+      if (!transcript || transcript.length < 100) { showError('Please paste a complete call transcript to get meaningful coaching.'); return; }
+      hideError();
+      showLoading();
+      const systemPrompt = selectedCallType === 'discovery' ? DISCOVERY_SYSTEM : GROWTH_SYSTEM;
+      const callLabel = selectedCallType === 'discovery' ? 'Discovery Call' : 'Growth Call';
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': 'REMOVED', 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            max_tokens: 4000,
+            system: systemPrompt,
+            messages: [{ role: 'user', content: `Analyze this ${callLabel} transcript against the Clarity Selling framework:\n\n${transcript}` }]
+          })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error?.message || 'API error');
+        const raw = data.content.map(b => b.text || '').join('');
+        const clean = raw.replace(/```json|```/g, '').trim();
+        const result = JSON.parse(clean);
+        renderResults(result, selectedCallType);
+      } catch (err) {
+        hideLoading();
+        document.getElementById('inputSection').style.display = 'block';
+        showError('Something went wrong. Please try again. (' + err.message + ')');
+      }
+    }
 
-function renderResults(r, callType) {
-  hideLoading();
-  document.getElementById('resCallTypeBanner').textContent = '◆ ' + (callType === 'discovery' ? 'Discovery Call' : 'Growth Call');
-  document.getElementById('resScore').textContent = r.overallScore;
-  document.getElementById('resOverallLabel').textContent = r.overallLabel;
-  document.getElementById('resOverallSummary').textContent = r.overallSummary;
-  document.getElementById('resConsciousness').textContent = r.consciousnessLevel;
-  document.getElementById('resConsciousnessDesc').textContent = r.consciousnessDescription;
+    function renderResults(r, callType) {
+      hideLoading();
+      document.getElementById('resCallTypeBanner').textContent = '◆ ' + (callType === 'discovery' ? 'Discovery Call' : 'Growth Call');
+      document.getElementById('resScore').textContent = r.overallScore;
+      document.getElementById('resOverallLabel').textContent = r.overallLabel;
+      document.getElementById('resOverallSummary').textContent = r.overallSummary;
+      document.getElementById('resConsciousness').textContent = r.consciousnessLevel;
+      document.getElementById('resConsciousnessDesc').textContent = r.consciousnessDescription;
 
-  const handoffCard = document.getElementById('handoffCard');
-  if (callType === 'discovery' && r.handoffNotes) {
-    document.getElementById('resHandoff').textContent = r.handoffNotes;
-    handoffCard.style.display = 'block';
-  } else {
-    handoffCard.style.display = 'none';
-  }
+      const handoffCard = document.getElementById('handoffCard');
+      if (callType === 'discovery' && r.handoffNotes) {
+        document.getElementById('resHandoff').textContent = r.handoffNotes;
+        handoffCard.style.display = 'block';
+      } else {
+        handoffCard.style.display = 'none';
+      }
 
-  const container = document.getElementById('stagesContainer');
-  container.innerHTML = '';
-  r.stages.forEach((stage, i) => {
-    const card = document.createElement('div');
-    card.className = 'stage-card';
-    const pillClass = { green: 'pill-green', amber: 'pill-amber', red: 'pill-red', gray: 'pill-gray' }[stage.status] || 'pill-gray';
-    const scoreLabel = stage.present ? stage.score + '/10' : 'Not Present';
-    const winsHtml = (stage.wins || []).map(w => `<span class="tag tag-win">✓ ${w}</span>`).join('');
-    const missesHtml = (stage.misses || []).map(m => `<span class="tag tag-miss">✗ ${m}</span>`).join('');
-    const num = (i + 1) < 10 ? '0' + (i + 1) : '' + (i + 1);
-    card.innerHTML = `
+      const container = document.getElementById('stagesContainer');
+      container.innerHTML = '';
+      r.stages.forEach((stage, i) => {
+        const card = document.createElement('div');
+        card.className = 'stage-card';
+        const pillClass = { green: 'pill-green', amber: 'pill-amber', red: 'pill-red', gray: 'pill-gray' }[stage.status] || 'pill-gray';
+        const scoreLabel = stage.present ? stage.score + '/10' : 'Not Present';
+        const winsHtml = (stage.wins || []).map(w => `<span class="tag tag-win">✓ ${w}</span>`).join('');
+        const missesHtml = (stage.misses || []).map(m => `<span class="tag tag-miss">✗ ${m}</span>`).join('');
+        const num = (i + 1) < 10 ? '0' + (i + 1) : '' + (i + 1);
+        card.innerHTML = `
       <div class="stage-header" onclick="this.closest('.stage-card').classList.toggle('open')">
         <span class="stage-num">${num}</span>
         <span class="stage-name">${stage.name}</span>
@@ -391,40 +917,41 @@ function renderResults(r, callType) {
         <div class="stage-section-label">Coaching Note</div>
         <div class="stage-text"><p>${stage.coaching}</p></div>
       </div>`;
-    container.appendChild(card);
-  });
+        container.appendChild(card);
+      });
 
-  document.getElementById('resCoachingNotes').textContent = r.coachingNotes;
-  const priList = document.getElementById('resPriorityList');
-  priList.innerHTML = '';
-  (r.priorities || []).forEach((p, i) => {
-    const item = document.createElement('div');
-    item.className = 'priority-item';
-    item.innerHTML = `<div class="priority-num">${i+1}</div><div class="priority-text"><strong>${p.title}:</strong> ${p.detail}</div>`;
-    priList.appendChild(item);
-  });
+      document.getElementById('resCoachingNotes').textContent = r.coachingNotes;
+      const priList = document.getElementById('resPriorityList');
+      priList.innerHTML = '';
+      (r.priorities || []).forEach((p, i) => {
+        const item = document.createElement('div');
+        item.className = 'priority-item';
+        item.innerHTML = `<div class="priority-num">${i + 1}</div><div class="priority-text"><strong>${p.title}:</strong> ${p.detail}</div>`;
+        priList.appendChild(item);
+      });
 
-  document.getElementById('resultsSection').classList.add('active');
-  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+      document.getElementById('resultsSection').classList.add('active');
+      document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-function showLoading() {
-  document.getElementById('inputSection').style.display = 'none';
-  document.getElementById('loadingSection').classList.add('active');
-  document.getElementById('loadingSub').textContent = 'Scoring against Bryan\'s ' + (selectedCallType === 'discovery' ? 'Discovery' : 'Growth') + ' Call framework';
-}
-function hideLoading() { document.getElementById('loadingSection').classList.remove('active'); }
-function showError(msg) { const b = document.getElementById('errorBox'); b.textContent = msg; b.classList.add('active'); }
-function hideError() { document.getElementById('errorBox').classList.remove('active'); }
-function resetTool() {
-  document.getElementById('resultsSection').classList.remove('active');
-  document.getElementById('inputSection').style.display = 'block';
-  document.getElementById('transcriptInput').value = '';
-  selectedCallType = null;
-  document.getElementById('btn-discovery').classList.remove('selected');
-  document.getElementById('btn-growth').classList.remove('selected');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-</script>
+    function showLoading() {
+      document.getElementById('inputSection').style.display = 'none';
+      document.getElementById('loadingSection').classList.add('active');
+      document.getElementById('loadingSub').textContent = 'Scoring against Bryan\'s ' + (selectedCallType === 'discovery' ? 'Discovery' : 'Growth') + ' Call framework';
+    }
+    function hideLoading() { document.getElementById('loadingSection').classList.remove('active'); }
+    function showError(msg) { const b = document.getElementById('errorBox'); b.textContent = msg; b.classList.add('active'); }
+    function hideError() { document.getElementById('errorBox').classList.remove('active'); }
+    function resetTool() {
+      document.getElementById('resultsSection').classList.remove('active');
+      document.getElementById('inputSection').style.display = 'block';
+      document.getElementById('transcriptInput').value = '';
+      selectedCallType = null;
+      document.getElementById('btn-discovery').classList.remove('selected');
+      document.getElementById('btn-growth').classList.remove('selected');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
 </body>
+
 </html>

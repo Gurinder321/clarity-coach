@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clarity Coach — Practice Call</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0f0e0c;
+      --ink-soft: #4a4741;
+      --ink-muted: #9a958e;
+      --paper: #faf8f4;
+      --paper-dark: #e8e3d9;
+      --gold: #c9a84c;
+      --gold-light: #f0dfa0;
+      --gold-pale: #fdf7e3;
+      --green: #2d6a4f;
+      --green-pale: #e8f4ed;
+      --red: #c0392b;
+      --red-pale: #fdecea;
+      --amber: #d97706;
+      --amber-pale: #fef3cd;
+      --border: #ddd8ce;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .header {
+      background: var(--ink);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: baseline; gap: 12px; }
+    .header-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: #fff; }
+    .header-sub { font-size: 12px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
+    .header-link {
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 1px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .header-link:hover { color: var(--gold); }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 48px 32px; }
+
+    .input-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+    }
+
+    .input-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .input-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--ink); margin-bottom: 6px; }
+    .input-desc { color: var(--ink-soft); font-size: 14px; margin-bottom: 28px; }
+
+    .call-type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+    .call-type-btn {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      cursor: pointer;
+      background: #fff;
+      text-align: left;
+      transition: all 0.18s;
+      position: relative;
+    }
+    .call-type-btn:hover { border-color: var(--gold); }
+    .call-type-btn.selected { border-color: var(--gold); background: var(--gold-pale); }
+    .call-type-btn.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 14px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .call-type-tag { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-muted); font-weight: 600; margin-bottom: 5px; }
+    .call-type-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+    .call-type-stages { font-size: 12px; color: var(--ink-muted); line-height: 1.6; }
+
+    .prospect-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+    .prospect-card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      cursor: pointer;
+      background: #fff;
+      text-align: left;
+      transition: all 0.18s;
+      position: relative;
+    }
+    .prospect-card:hover { border-color: var(--gold); }
+    .prospect-card.selected { border-color: var(--gold); background: var(--gold-pale); }
+    .prospect-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .prospect-emoji { font-size: 22px; margin-bottom: 8px; }
+    .prospect-name { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+    .prospect-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.4; }
+
+    .slider-row { margin-bottom: 32px; }
+    input[type=range] { width: 100%; accent-color: var(--gold); cursor: pointer; margin-top: 8px; }
+    .slider-value-label { font-size: 13px; color: var(--amber); font-weight: 600; margin-top: 8px; }
+    .slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-muted); margin-top: 4px; }
+
+    .start-btn {
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 32px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .start-btn:hover { background: #1f1e1a; }
+    .browser-note { font-size: 12px; color: var(--ink-muted); margin-top: 10px; }
+
+    /* Call screen */
+    .setup-screen { display: block; }
+    .setup-screen.hidden { display: none; }
+    .call-screen { display: none; }
+    .call-screen.active { display: block; }
+
+    .prospect-banner {
+      background: var(--gold-pale);
+      border: 1px solid var(--gold-light);
+      border-radius: 10px;
+      padding: 16px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .prospect-banner-emoji { font-size: 28px; }
+    .prospect-banner-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink); }
+    .prospect-banner-resistance { font-size: 12px; color: var(--amber); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+    .call-transcript {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      min-height: 340px;
+      max-height: 460px;
+      overflow-y: auto;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .message { display: flex; flex-direction: column; gap: 4px; max-width: 78%; }
+    .message.user { align-self: flex-end; align-items: flex-end; }
+    .message.prospect { align-self: flex-start; align-items: flex-start; }
+    .message-label { font-size: 11px; color: var(--ink-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+    .message-bubble { padding: 12px 16px; border-radius: 10px; font-size: 14px; line-height: 1.6; }
+    .message.user .message-bubble { background: var(--ink); color: #fff; border-bottom-right-radius: 3px; }
+    .message.prospect .message-bubble { background: #fff; border: 1px solid var(--border); color: var(--ink); border-bottom-left-radius: 3px; }
+
+    .call-status { text-align: center; font-size: 13px; color: var(--ink-muted); margin-bottom: 16px; min-height: 20px; font-style: italic; }
+
+    .call-controls { display: flex; align-items: center; justify-content: center; gap: 24px; }
+
+    .mic-btn {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .mic-btn:hover:not(:disabled) { background: #1f1e1a; transform: scale(1.05); }
+    .mic-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+    .mic-btn.listening { background: var(--red); animation: rpulse 1.2s infinite; }
+    .mic-btn.speaking { background: var(--green); }
+
+    @keyframes rpulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); }
+      50% { box-shadow: 0 0 0 14px rgba(192,57,43,0); }
+    }
+
+    .end-call-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .end-call-btn:hover { border-color: var(--red); color: var(--red); }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <div class="header-title">Clarity Coach</div>
+      <div class="header-sub">Practice Call</div>
+    </div>
+    <a href="/" class="header-link">← Sales Analyzer</a>
+  </div>
+
+  <div class="container">
+    <div class="input-card">
+
+      <!-- Setup Screen -->
+      <div class="setup-screen" id="setupScreen">
+        <span class="input-label">Step 1 — Select Call Type</span>
+        <h1 class="input-title">Practice a live call</h1>
+        <p class="input-desc">Speak out loud. The prospect responds in character. Set how difficult they are before you start.</p>
+
+        <div class="call-type-row">
+          <div class="call-type-btn" id="btn-discovery" onclick="selectCallType('discovery')">
+            <div class="call-type-tag">Call 1</div>
+            <div class="call-type-name">Discovery Call</div>
+            <div class="call-type-stages">Qualify · Discover · Build rapport · Set up Growth Call</div>
+          </div>
+          <div class="call-type-btn" id="btn-growth" onclick="selectCallType('growth')">
+            <div class="call-type-tag">Call 2</div>
+            <div class="call-type-name">Growth Call</div>
+            <div class="call-type-stages">Recap · Pitch · Handle resistance · Close</div>
+          </div>
+        </div>
+
+        <span class="input-label">Step 2 — Choose Your Prospect</span>
+        <div class="prospect-grid">
+          <div class="prospect-card" id="prospect-skeptic" onclick="selectProspect('skeptic')">
+            <div class="prospect-emoji">🤨</div>
+            <div class="prospect-name">The Skeptic</div>
+            <div class="prospect-desc">Been burned before. Questions everything.</div>
+          </div>
+          <div class="prospect-card" id="prospect-exec" onclick="selectProspect('exec')">
+            <div class="prospect-emoji">⏱️</div>
+            <div class="prospect-name">The Busy Exec</div>
+            <div class="prospect-desc">Time-pressured. Needs quick value.</div>
+          </div>
+          <div class="prospect-card" id="prospect-price" onclick="selectProspect('price')">
+            <div class="prospect-emoji">💰</div>
+            <div class="prospect-name">The Price Fighter</div>
+            <div class="prospect-desc">Always negotiating. ROI obsessed.</div>
+          </div>
+          <div class="prospect-card" id="prospect-dreamer" onclick="selectProspect('dreamer')">
+            <div class="prospect-emoji">✨</div>
+            <div class="prospect-name">The Dreamer</div>
+            <div class="prospect-desc">Excited but never commits.</div>
+          </div>
+          <div class="prospect-card" id="prospect-gatekeeper" onclick="selectProspect('gatekeeper')">
+            <div class="prospect-emoji">🤝</div>
+            <div class="prospect-name">The Decider</div>
+            <div class="prospect-desc">Needs to consult their partner first.</div>
+          </div>
+          <div class="prospect-card" id="prospect-ghost" onclick="selectProspect('ghost')">
+            <div class="prospect-emoji">👻</div>
+            <div class="prospect-name">The Ghost</div>
+            <div class="prospect-desc">One-word answers. Hard to read.</div>
+          </div>
+        </div>
+
+        <span class="input-label">Step 3 — Set Resistance Level</span>
+        <div class="slider-row">
+          <input type="range" id="resistanceSlider" min="1" max="5" value="3" oninput="updateResistanceLabel()">
+          <div class="slider-value-label" id="resistanceLabel">Moderately Resistant</div>
+          <div class="slider-labels"><span>Very Open</span><span>Very Rude</span></div>
+        </div>
+
+        <button class="start-btn" onclick="startCall()">◆ Start Practice Call</button>
+        <p class="browser-note">Uses your microphone. Works best in Chrome.</p>
+      </div>
+
+      <!-- Call Screen -->
+      <div class="call-screen" id="callScreen">
+        <div class="prospect-banner">
+          <div class="prospect-banner-emoji" id="callProspectEmoji"></div>
+          <div>
+            <div class="prospect-banner-name" id="callProspectName"></div>
+            <div class="prospect-banner-resistance" id="callProspectResistance"></div>
+          </div>
+        </div>
+
+        <div class="call-transcript" id="callTranscript"></div>
+
+        <div class="call-status" id="callStatus">Connecting...</div>
+
+        <div class="call-controls">
+          <button class="end-call-btn" onclick="endCall()">End Call</button>
+          <button class="mic-btn" id="micBtn" onclick="toggleMic()" disabled>🎙️</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let selectedCallType = null;
+    let selectedProspect = null;
+    let resistanceLevel = 3;
+    let conversationHistory = [];
+    let isListening = false;
+    let recognition = null;
+
+    const prospects = {
+      skeptic:    { name: 'The Skeptic',      emoji: '🤨', desc: 'Been burned before. Questions everything.' },
+      exec:       { name: 'The Busy Exec',     emoji: '⏱️', desc: 'Time-pressured. Needs quick value.' },
+      price:      { name: 'The Price Fighter', emoji: '💰', desc: 'Always negotiating. ROI obsessed.' },
+      dreamer:    { name: 'The Dreamer',       emoji: '✨', desc: 'Excited but never commits.' },
+      gatekeeper: { name: 'The Decider',       emoji: '🤝', desc: 'Needs to consult their partner first.' },
+      ghost:      { name: 'The Ghost',         emoji: '👻', desc: 'One-word answers. Hard to read.' }
+    };
+
+    const resistanceLabels = {
+      1: 'Very Open',
+      2: 'Mildly Skeptical',
+      3: 'Moderately Resistant',
+      4: 'Quite Resistant',
+      5: 'Very Rude'
+    };
+
+    function selectCallType(type) {
+      selectedCallType = type;
+      document.getElementById('btn-discovery').classList.toggle('selected', type === 'discovery');
+      document.getElementById('btn-growth').classList.toggle('selected', type === 'growth');
+    }
+
+    function selectProspect(type) {
+      selectedProspect = type;
+      document.querySelectorAll('.prospect-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('prospect-' + type).classList.add('selected');
+    }
+
+    function updateResistanceLabel() {
+      resistanceLevel = parseInt(document.getElementById('resistanceSlider').value);
+      document.getElementById('resistanceLabel').textContent = resistanceLabels[resistanceLevel];
+    }
+
+    async function startCall() {
+      if (!selectedCallType) { alert('Please select a call type.'); return; }
+      if (!selectedProspect) { alert('Please select a prospect type.'); return; }
+
+      conversationHistory = [];
+      document.getElementById('setupScreen').classList.add('hidden');
+      document.getElementById('callScreen').classList.add('active');
+
+      const p = prospects[selectedProspect];
+      document.getElementById('callProspectEmoji').textContent = p.emoji;
+      document.getElementById('callProspectName').textContent = p.name;
+      document.getElementById('callProspectResistance').textContent = 'Resistance: ' + resistanceLabels[resistanceLevel];
+      document.getElementById('callTranscript').innerHTML = '';
+
+      setStatus('Prospect is joining...');
+      const opening = await getProspectResponse([{
+        role: 'user',
+        content: 'Answer the phone. Brief natural greeting — 1 sentence only.'
+      }]);
+      addMessage('prospect', opening);
+      speak(opening);
+    }
+
+    async function getProspectResponse(messages) {
+      try {
+        const p = prospects[selectedProspect];
+        const res = await fetch('/api/roleplay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages,
+            prospectConfig: {
+              callType: selectedCallType,
+              personality: p.name + ' — ' + p.desc,
+              resistanceLevel
+            }
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        return data.text;
+      } catch (err) {
+        return 'Sorry, I missed that — can you say that again?';
+      }
+    }
+
+    function addMessage(role, text) {
+      const t = document.getElementById('callTranscript');
+      const div = document.createElement('div');
+      div.className = 'message ' + role;
+      div.innerHTML = `<div class="message-label">${role === 'user' ? 'You' : 'Prospect'}</div><div class="message-bubble">${text}</div>`;
+      t.appendChild(div);
+      t.scrollTop = t.scrollHeight;
+    }
+
+    function setStatus(text) {
+      document.getElementById('callStatus').textContent = text;
+    }
+
+    function speak(text) {
+      setStatus('Prospect is speaking...');
+      const micBtn = document.getElementById('micBtn');
+      micBtn.classList.remove('listening');
+      micBtn.classList.add('speaking');
+      micBtn.disabled = true;
+      window.speechSynthesis.cancel();
+      const utt = new SpeechSynthesisUtterance(text);
+      utt.rate = 0.95;
+      utt.onend = () => {
+        micBtn.classList.remove('speaking');
+        micBtn.disabled = false;
+        setStatus('Your turn — click the mic to speak');
+      };
+      window.speechSynthesis.speak(utt);
+    }
+
+    function toggleMic() {
+      if (isListening) { stopListening(); return; }
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) { alert('Speech recognition is not supported in this browser. Please use Chrome.'); return; }
+
+      recognition = new SR();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        isListening = true;
+        document.getElementById('micBtn').classList.add('listening');
+        setStatus('Listening...');
+      };
+
+      recognition.onresult = async (event) => {
+        const spoken = event.results[0][0].transcript;
+        stopListening();
+        addMessage('user', spoken);
+        setStatus('Prospect is thinking...');
+        conversationHistory.push({ role: 'user', content: spoken });
+        const response = await getProspectResponse(conversationHistory);
+        conversationHistory.push({ role: 'assistant', content: response });
+        addMessage('prospect', response);
+        speak(response);
+      };
+
+      recognition.onerror = () => { stopListening(); setStatus('Could not hear you. Try again.'); };
+      recognition.onend = () => { if (isListening) stopListening(); };
+      recognition.start();
+    }
+
+    function stopListening() {
+      isListening = false;
+      document.getElementById('micBtn').classList.remove('listening');
+      if (recognition) recognition.stop();
+    }
+
+    function endCall() {
+      window.speechSynthesis.cancel();
+      stopListening();
+      document.getElementById('callScreen').classList.remove('active');
+      document.getElementById('setupScreen').classList.remove('hidden');
+      document.getElementById('setupScreen').classList.remove('hidden');
+      setStatus('');
+      document.getElementById('micBtn').disabled = false;
+    }
+  </script>
+
+</body>
+</html>
